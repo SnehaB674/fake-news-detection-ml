@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: fake-news-detection-system
+    runtime: python
+    plan: free
+
+    buildCommand: pip install -r requirements.txt && python -m nltk.downloader stopwords
+
+    startCommand: gunicorn app:app

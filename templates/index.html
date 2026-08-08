@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Fake News Detection System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+
+<body>
+
+
+<!-- ==============================
+     Navigation Bar
+================================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <i class="fas fa-newspaper"></i>
+
+        Fake News Detection
+
+    </div>
+
+
+    <ul class="nav-links">
+
+        <li>
+            <a href="/">
+                Home
+            </a>
+        </li>
+
+        <li>
+            <a href="/about">
+                About
+            </a>
+        </li>
+
+        <li>
+            <a href="/performance">
+                Performance
+            </a>
+        </li>
+
+        <li>
+            <a href="/history">
+                History
+            </a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+
+<!-- ==============================
+     Main Dashboard
+================================= -->
+
+<main class="dashboard-container">
+
+
+    <!-- Header -->
+
+    <section class="dashboard-header">
+
+        <h1>
+
+            <i class="fas fa-shield-halved"></i>
+
+            Fake News Detection Using
+            Machine Learning & NLP
+
+        </h1>
+
+
+        <p class="subtitle">
+
+            Analyze news articles using Natural Language Processing
+            and Machine Learning.
+
+        </p>
+
+
+        <!-- Current Date & Time -->
+
+        <div class="datetime-box">
+
+            <i class="far fa-clock"></i>
+
+            <span id="currentDateTime">
+                Loading date and time...
+            </span>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==============================
+         Model Information
+    ================================= -->
+
+    <section class="info-grid">
+
+
+        <!-- Model -->
+
+        <div class="info-card">
+
+            <div class="info-icon">
+
+                <i class="fas fa-robot"></i>
+
+            </div>
+
+
+            <div>
+
+                <h3>
+                    Machine Learning Model
+                </h3>
+
+                <p>
+                    Logistic Regression
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Version -->
+
+        <div class="info-card">
+
+            <div class="info-icon">
+
+                <i class="fas fa-code-branch"></i>
+
+            </div>
+
+
+            <div>
+
+                <h3>
+                    Model Version
+                </h3>
+
+                <p>
+                    Logistic Regression v1.0
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Accuracy -->
+
+        <div class="info-card">
+
+            <div class="info-icon">
+
+                <i class="fas fa-bullseye"></i>
+
+            </div>
+
+
+            <div>
+
+                <h3>
+                    Test Accuracy
+                </h3>
+
+                <p>
+                    100%
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Dataset -->
+
+        <div class="info-card">
+
+            <div class="info-icon">
+
+                <i class="fas fa-database"></i>
+
+            </div>
+
+
+            <div>
+
+                <h3>
+                    Dataset
+                </h3>
+
+                <p>
+                    Fake News & True News
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==============================
+         Prediction Card
+    ================================= -->
+
+    <section class="prediction-card">
+
+
+        <h2>
+
+            <i class="fas fa-search"></i>
+
+            Detect Fake News
+
+        </h2>
+
+
+        <p class="prediction-description">
+
+            Paste the complete news article below to determine
+            whether the content is classified as Real or Fake.
+
+        </p>
+
+
+
+        <!-- Prediction Form -->
+
+        <form action="/predict"
+              method="POST">
+
+
+            <textarea
+
+                id="news"
+
+                name="news"
+
+                placeholder="Paste the complete news article here..."
+
+                required
+
+            >{{ news if news else "" }}</textarea>
+
+
+
+            <!-- Character Counter -->
+
+            <div class="character-counter">
+
+                Characters :
+
+                <span id="count">
+                    0
+                </span>
+
+            </div>
+
+
+
+            <!-- Buttons -->
+
+            <div class="button-group">
+
+
+                <button
+                    type="submit"
+                    class="detect-btn">
+
+                    <i class="fas fa-search"></i>
+
+                    Detect News
+
+                </button>
+
+
+
+                <button
+                    type="button"
+                    class="clear-btn"
+                    onclick="clearText()">
+
+                    <i class="fas fa-eraser"></i>
+
+                    Clear
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+
+        <!-- ==============================
+             Error Message
+        ================================= -->
+
+        {% if error %}
+
+        <div class="error-box">
+
+            <i class="fas fa-circle-exclamation"></i>
+
+            {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+
+        <!-- ==============================
+             Prediction Result
+        ================================= -->
+
+        {% if prediction %}
+
+        <div class="result-card {{ prediction_class }}">
+
+
+            {% if prediction == "Real News" %}
+
+                <h2>
+
+                    <i class="fas fa-circle-check"></i>
+
+                    {{ prediction }}
+
+                </h2>
+
+            {% else %}
+
+                <h2>
+
+                    <i class="fas fa-circle-xmark"></i>
+
+                    {{ prediction }}
+
+                </h2>
+
+            {% endif %}
+
+
+
+            <div class="result-details">
+
+
+                <p>
+
+                    <strong>
+                        Confidence:
+                    </strong>
+
+                    {{ confidence }}%
+
+                </p>
+
+
+                <p>
+
+                    <strong>
+                        Algorithm:
+                    </strong>
+
+                    {{ algorithm }}
+
+                </p>
+
+
+                <p>
+
+                    <strong>
+                        Model Version:
+                    </strong>
+
+                    Logistic Regression v1.0
+
+                </p>
+
+
+            </div>
+
+
+
+            <!-- Confidence Bar -->
+
+            <div class="confidence-container">
+
+                <div class="confidence-label">
+
+                    <span>
+                        Confidence Level
+                    </span>
+
+                    <span>
+                        {{ confidence }}%
+                    </span>
+
+                </div>
+
+
+                <div class="confidence-bar">
+
+                    <div
+                        class="confidence-fill"
+                        style="width: {{ confidence }}%;">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+        {% endif %}
+
+
+    </section>
+
+
+
+    <!-- ==============================
+         Technology Section
+    ================================= -->
+
+    <section class="technology-section">
+
+
+        <h2>
+
+            <i class="fas fa-layer-group"></i>
+
+            Technologies Used
+
+        </h2>
+
+
+        <div class="technology-grid">
+
+
+            <div class="technology-item">
+
+                <i class="fab fa-python"></i>
+
+                <span>
+                    Python
+                </span>
+
+            </div>
+
+
+            <div class="technology-item">
+
+                <i class="fas fa-flask"></i>
+
+                <span>
+                    Flask
+                </span>
+
+            </div>
+
+
+            <div class="technology-item">
+
+                <i class="fas fa-brain"></i>
+
+                <span>
+                    Scikit-Learn
+                </span>
+
+            </div>
+
+
+            <div class="technology-item">
+
+                <i class="fas fa-language"></i>
+
+                <span>
+                    NLTK
+                </span>
+
+            </div>
+
+
+            <div class="technology-item">
+
+                <i class="fab fa-html5"></i>
+
+                <span>
+                    HTML
+                </span>
+
+            </div>
+
+
+            <div class="technology-item">
+
+                <i class="fab fa-css3-alt"></i>
+
+                <span>
+                    CSS
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<!-- ==============================
+     Footer
+================================= -->
+
+<footer>
+
+    <p>
+
+        © 2026 Fake News Detection Using
+        Machine Learning & NLP
+
+    </p>
+
+</footer>
+
+
+
+<!-- ==============================
+     JavaScript
+================================= -->
+
+<script>
+
+
+/* =================================
+   Character Counter
+================================= */
+
+const textarea =
+    document.getElementById("news");
+
+const count =
+    document.getElementById("count");
+
+
+function updateCount() {
+
+    if (textarea && count) {
+
+        count.textContent =
+            textarea.value.length;
+
+    }
+
+}
+
+
+if (textarea) {
+
+    textarea.addEventListener(
+        "input",
+        updateCount
+    );
+
+    updateCount();
+
+}
+
+
+
+/* =================================
+   Clear Text
+================================= */
+
+function clearText() {
+
+    if (textarea) {
+
+        textarea.value = "";
+
+        updateCount();
+
+        textarea.focus();
+
+    }
+
+}
+
+
+
+/* =================================
+   Current Date & Time
+================================= */
+
+function updateDateTime() {
+
+    const dateTimeElement =
+        document.getElementById(
+            "currentDateTime"
+        );
+
+
+    if (!dateTimeElement) {
+
+        return;
+
+    }
+
+
+    const now =
+        new Date();
+
+
+    const options = {
+
+        weekday: "long",
+
+        year: "numeric",
+
+        month: "long",
+
+        day: "numeric",
+
+        hour: "2-digit",
+
+        minute: "2-digit",
+
+        second: "2-digit"
+
+    };
+
+
+    dateTimeElement.textContent =
+        now.toLocaleString(
+            "en-IN",
+            options
+        );
+
+}
+
+
+updateDateTime();
+
+
+setInterval(
+    updateDateTime,
+    1000
+);
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Model Performance</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<!-- ==========================
+     Navigation Bar
+========================== -->
+
+<nav class="navbar">
+
+<div class="logo">
+
+    <img
+        src="{{ url_for('static', filename='images/project-logo.png') }}"
+        alt="Fake News Detection Logo"
+        class="project-logo">
+
+    <span>
+        Fake News Detection
+    </span>
+
+</div>
+
+    <ul class="nav-links">
+
+        <li>
+            <a href="/">Home</a>
+        </li>
+
+        <li>
+            <a href="/about">About</a>
+        </li>
+
+        <li>
+            <a href="/performance" class="active">
+                Performance
+            </a>
+        </li>
+
+        <li>
+            <a href="/history">History</a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<!-- ==========================
+     Main Content
+========================== -->
+
+<main class="page-container">
+
+    <div class="performance-container">
+
+
+        <!-- Page Heading -->
+
+        <div class="page-heading">
+
+    <div class="dashboard-title">
+
+        <i class="fas fa-chart-line"></i>
+
+        <h1>Model Performance Dashboard</h1>
+
+    </div>
+
+    <p>
+        Evaluation results and real-time prediction statistics
+    </p>
+
+    <div class="dashboard-time">
+
+        <i class="fas fa-calendar-alt"></i>
+
+        <span id="currentDateTime">
+            {{ current_datetime }}
+        </span>
+
+    </div>
+
+</div>
+
+        <!-- ==========================
+             Model Information
+        ========================== -->
+
+        <div class="model-card">
+
+    <div class="model-icon">
+
+        <i class="fas fa-brain"></i>
+
+    </div>
+
+    <div class="model-information">
+
+        <h2>Best Model</h2>
+
+        <h3>
+            🏆 {{ model_name }}
+        </h3>
+
+        <div class="model-version">
+
+            <i class="fas fa-code-branch"></i>
+
+            Model Version:
+            <strong>{{ model_version }}</strong>
+
+        </div>
+
+        <p>
+            Logistic Regression is the selected machine learning
+            model used for fake news classification in this
+            application.
+        </p>
+
+    </div>
+
+</div>
+
+        <!-- ==========================
+             Statistics Cards
+        ========================== -->
+
+        <div class="statistics-grid">
+
+
+            <!-- Total -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-chart-bar"></i>
+
+                </div>
+
+                <h2>
+                    {{ total_predictions }}
+                </h2>
+
+                <p>Total Predictions</p>
+
+            </div>
+
+
+            <!-- Real -->
+
+            <div class="stat-card real-stat">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-check-circle"></i>
+
+                </div>
+
+                <h2>
+                    {{ real_count }}
+                </h2>
+
+                <p>Real News</p>
+
+                <span>
+                    {{ real_percentage }}%
+                </span>
+
+            </div>
+
+
+            <!-- Fake -->
+
+            <div class="stat-card fake-stat">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-times-circle"></i>
+
+                </div>
+
+                <h2>
+                    {{ fake_count }}
+                </h2>
+
+                <p>Fake News</p>
+
+                <span>
+                    {{ fake_percentage }}%
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================
+             Prediction Statistics
+        ========================== -->
+
+        <div class="section-card">
+
+            <h2>
+
+                <i class="fas fa-chart-pie"></i>
+
+                Prediction Statistics
+
+            </h2>
+
+            <p class="section-description">
+
+                These charts are generated from the prediction
+                history stored in the CSV file.
+
+            </p>
+
+
+            <div class="charts-grid">
+
+
+                <!-- Pie Chart -->
+
+                <div class="chart-card">
+
+                    <h3>
+                        Prediction Distribution
+                    </h3>
+
+                    <div class="chart-wrapper">
+
+                        <canvas id="predictionPieChart"></canvas>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Bar Chart -->
+
+                <div class="chart-card">
+
+                    <h3>
+                        Prediction Count
+                    </h3>
+
+                    <div class="chart-wrapper">
+
+                        <canvas id="predictionBarChart"></canvas>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================
+             Accuracy Comparison
+        ========================== -->
+
+        <div class="section-card">
+
+            <h2>
+
+                <i class="fas fa-ranking-star"></i>
+
+                Model Accuracy Comparison
+
+            </h2>
+
+
+            <table class="performance-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Algorithm</th>
+
+                        <th>Accuracy</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>
+                            Logistic Regression
+                        </td>
+
+                        <td>
+                            <strong>100%</strong>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+                            Decision Tree
+                        </td>
+
+                        <td>
+                            <strong>100%</strong>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+                            Random Forest
+                        </td>
+
+                        <td>
+                            <strong>100%</strong>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+                            Passive Aggressive
+                        </td>
+
+                        <td>
+                            <strong>100%</strong>
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- ==========================
+             Confusion Matrix
+        ========================== -->
+
+        <div class="section-card">
+
+            <h2>
+
+                <i class="fas fa-table"></i>
+
+                Confusion Matrix
+
+            </h2>
+
+
+            <table class="performance-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th></th>
+
+                        <th>Predicted Fake</th>
+
+                        <th>Predicted Real</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <th>Actual Fake</th>
+
+                        <td>26</td>
+
+                        <td>0</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>Actual Real</th>
+
+                        <td>0</td>
+
+                        <td>24</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- ==========================
+             Classification Report
+        ========================== -->
+
+        <div class="section-card">
+
+            <h2>
+
+                <i class="fas fa-file-lines"></i>
+
+                Classification Report
+
+            </h2>
+
+
+            <table class="performance-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Metric</th>
+
+                        <th>Fake</th>
+
+                        <th>Real</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>Precision</td>
+
+                        <td>1.00</td>
+
+                        <td>1.00</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Recall</td>
+
+                        <td>1.00</td>
+
+                        <td>1.00</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>F1 Score</td>
+
+                        <td>1.00</td>
+
+                        <td>1.00</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+    </div>
+
+</main>
+
+
+<!-- ==========================
+     Footer
+========================== -->
+
+<footer>
+
+    <p>
+        © 2026 Fake News Detection Using Machine Learning & NLP
+    </p>
+
+</footer>
+
+
+<!-- ==========================
+     Charts
+========================== -->
+
+<script>
+
+    /*
+     * Real values obtained from prediction_history.csv
+     */
+
+    const realCount = {{ real_count | default(0) }};
+    const fakeCount = {{ fake_count | default(0) }};
+
+
+    /* ==========================
+       Pie Chart
+    ========================== */
+
+    const pieCanvas =
+        document.getElementById("predictionPieChart");
+
+    new Chart(pieCanvas, {
+
+        type: "pie",
+
+        data: {
+
+            labels: [
+                "Real News",
+                "Fake News"
+            ],
+
+            datasets: [{
+
+                data: [
+                    realCount,
+                    fakeCount
+                ],
+
+                backgroundColor: [
+                    "#2e7d32",
+                    "#c62828"
+                ],
+
+                borderWidth: 2,
+
+                borderColor: "#ffffff"
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+
+                legend: {
+
+                    position: "bottom"
+
+                }
+
+            }
+
+        }
+
+    });
+
+
+    /* ==========================
+       Bar Chart
+    ========================== */
+
+    const barCanvas =
+        document.getElementById("predictionBarChart");
+
+    new Chart(barCanvas, {
+
+        type: "bar",
+
+        data: {
+
+            labels: [
+                "Real News",
+                "Fake News"
+            ],
+
+            datasets: [{
+
+                label: "Number of Predictions",
+
+                data: [
+                    realCount,
+                    fakeCount
+                ],
+
+                backgroundColor: [
+                    "#2e7d32",
+                    "#c62828"
+                ],
+
+                borderRadius: 8
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true,
+
+                    ticks: {
+
+                        precision: 0
+
+                    }
+
+                }
+
+            },
+
+            plugins: {
+
+                legend: {
+
+                    display: false
+
+                }
+
+            }
+
+        }
+
+    });
+
+</script>
+
+
+</body>
+
+</html>
+
+<script>
+
+    function updateDashboardClock() {
+
+        const now = new Date();
+
+        const options = {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+        };
+
+        const formattedDateTime =
+            now.toLocaleString("en-IN", options);
+
+        const clock =
+            document.getElementById("currentDateTime");
+
+        if (clock) {
+            clock.textContent = formattedDateTime;
+        }
+    }
+
+    updateDashboardClock();
+
+    setInterval(updateDashboardClock, 1000);
+
+</script>
