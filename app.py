@@ -36,13 +36,27 @@ model = joblib.load(MODEL_PATH)
 vectorizer = joblib.load(VECTORIZER_PATH)
 
 
-# =========================================================
-# NLP Configuration
-# =========================================================
+# ==========================
+# NLTK Configuration
+# ==========================
+import nltk
+
+NLTK_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nltk_data")
+
+if NLTK_DATA_DIR not in nltk.data.path:
+    nltk.data.path.append(NLTK_DATA_DIR)
+
+try:
+    stop_words = set(stopwords.words("english"))
+except LookupError:
+    nltk.download(
+        "stopwords",
+        download_dir=NLTK_DATA_DIR,
+        quiet=True
+    )
+    stop_words = set(stopwords.words("english"))
 
 stemmer = PorterStemmer()
-stop_words = set(stopwords.words("english"))
-
 
 # =========================================================
 # Text Cleaning Function
